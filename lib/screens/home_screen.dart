@@ -1,7 +1,11 @@
+import 'package:clippy_flutter/arc.dart';
 import 'package:flutter/material.dart';
+import 'package:green_transport/app_routing/routing_constants.dart';
 import 'package:green_transport/constants/Constants.dart';
 import 'package:green_transport/firestore/firestore_api.dart';
 import 'package:intl/intl.dart';
+
+import 'app_translations.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -12,6 +16,17 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController sourceController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
 
+  var _sourceValue;
+  var _destValue;
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _sourceValue = AppTranslations.of(context).text("source");
+    _destValue = AppTranslations.of(context).text("Destination");
+  }
+
   var textStyle;
 
   FireStoreDatabase fireStoreDatabase = FireStoreDatabase();
@@ -21,36 +36,75 @@ class _HomeScreenState extends State<HomeScreen> {
     textStyle = Theme.of(context).textTheme.title;
     print(fireStoreDatabase.getBus());
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Green Transport"),
-        centerTitle: true,
-      ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          sourceDestinationCard(),
-          SizedBox(height: 16),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: RaisedButton(
-              color: Theme.of(context).primaryColor,
-              elevation: 8,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  "Search Buses",
+        appBar: AppBar(
+          title: Text("Green Transport"),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.language,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                Navigator.of(context).pushNamed(Screens.SELECT_LANGUAGE);
+              },
+            )
+          ],
+        ),
+        body: Stack(
+          children: <Widget>[
+            Container(
+              child: Arc(
+                  height: 50,
+                  child: Container(
+                    height: 250,
+                    color: Colors.blue,
+                  )),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  AppTranslations.of(context).text("Where_do_you_want_to_go"),
+                  textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.white, fontSize: 24),
                 ),
-              ),
-              onPressed: () => _onGoButtonClick,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
+                SizedBox(
+                  height: 20,
+                ),
+                Icon(
+                  Icons.directions_bus,
+                  size: 80,
+                  color: Colors.white,
+                ),
+                sourceDestinationCard(),
+                SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  child: RaisedButton(
+                    color: Theme.of(context).primaryColor,
+                    elevation: 8,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Text(
+                        "Search Buses",
+                        style: TextStyle(color: Colors.white, fontSize: 24),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.pushNamed(context, Screens.DETAILS);
+                    },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
-    );
+          ],
+        ));
   }
 
   sourceDestinationCard() {
@@ -72,25 +126,43 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    hint: Text(
-                      "Source",
-                      style: textStyle,
-                    ),
-                    isExpanded: true,
-                    style: textStyle,
-                    items: _sourceStationList.map((dropDownText) {
-                      return DropdownMenuItem(
-                        value: dropDownText,
-                        child: Text(dropDownText),
-                      );
-                    }).toList(),
-                    onChanged: (String value) => _onSourceTextChanged,
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 8,
                   ),
-                ),
+                  Icon(
+                    Icons.location_on,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            hint: Text(
+                              AppTranslations.of(context).text("source"),
+                              style: textStyle,
+                            ),
+                            isExpanded: true,
+                            style: textStyle,
+                            items: _sourceStationList.map((dropDownText) {
+                              return DropdownMenuItem(
+                                value: AppTranslations.of(context).text(dropDownText),
+                                child: Text(AppTranslations.of(context).text(dropDownText)),
+                              );
+                            }).toList(),
+                            onChanged: (String value) => _onSourceTextChanged,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(
@@ -98,58 +170,95 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Container(
               decoration: ShapeDecoration(
-                  shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.black, style: BorderStyle.solid, width: 1),
-                borderRadius: BorderRadius.circular(8.0),
-              )),
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8.0),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    hint: Text(
-                      "Destination",
-                      style: textStyle,
-                    ),
-                    isExpanded: true,
-                    style: textStyle,
-                    items: _destinationStationList.map((dropDownText) {
-                      return DropdownMenuItem(
-                        value: dropDownText,
-                        child: Text(dropDownText),
-                      );
-                    }).toList(),
-                    onChanged: (String value) => _onSourceTextChanged,
-                  ),
+                shape: RoundedRectangleBorder(
+                  side: BorderSide(color: Colors.black, style: BorderStyle.solid, width: 1),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
+              ),
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Icon(
+                    Icons.location_on,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: Container(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            hint: Text(
+                              AppTranslations.of(context).text("Destination"),
+                              style: textStyle,
+                            ),
+                            isExpanded: true,
+                            style: textStyle,
+                            items: _destinationStationList.map((dropDownText) {
+                              return DropdownMenuItem(
+                                value: AppTranslations.of(context).text(dropDownText),
+                                child: Text(AppTranslations.of(context).text(dropDownText)),
+                              );
+                            }).toList(),
+                            onChanged: (String value) => _onDestinationTextChanged,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             SizedBox(
               height: 20,
             ),
             Container(
-              padding: EdgeInsets.only(left: 16),
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
                   side: BorderSide(color: Colors.black, style: BorderStyle.solid, width: 1),
                   borderRadius: BorderRadius.circular(8.0),
                 ),
               ),
-              child: GestureDetector(
-                onTap: () => _selectStartDate(),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Text(
-                        _startDateValue,
-                        style: textStyle,
+              child: Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Icon(
+                    Icons.calendar_today,
+                    color: Colors.blue,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: EdgeInsets.only(left: 16),
+                      child: GestureDetector(
+                        onTap: () => _selectStartDate(),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: Text(
+                                _startDateValue,
+                                style: textStyle,
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => _selectStartDate(),
+                              icon: Icon(Icons.arrow_drop_down),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                    IconButton(
-                      onPressed: () => _selectStartDate(),
-                      icon: Icon(Icons.arrow_drop_down),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             SizedBox(
@@ -162,7 +271,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _startDateValue = 'Start Date';
+  String _startDateValue;
 
   Future _selectStartDate() async {
     DateTime now = DateTime.now();
@@ -205,7 +314,9 @@ class _HomeScreenState extends State<HomeScreen> {
   ),*/
 
   _onSourceTextChanged(String source) {
-    //Todo: Store the new value to req object
+    setState(() {
+      _sourceValue = source;
+    });
   }
 
   void _onSwapIconClick() {
@@ -213,10 +324,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _onDestinationTextChanged(String destination) {
-    //Todo: Store the new value to req object
+    setState(() {
+      _destValue = destination;
+    });
   }
 
   void _onGoButtonClick() {
-    //Todo: Navigate to next screen
+    Navigator.of(context).pushNamed(Screens.DETAILS);
   }
 }
