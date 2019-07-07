@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "428296414415",
+    "firebase_url": "https://greentransport-1970b.firebaseio.com",
+    "project_id": "greentransport-1970b",
+    "storage_bucket": "greentransport-1970b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428296414415:android:8f90362b1bd58530",
+        "android_client_info": {
+          "package_name": "com.purveshmodi.green_transport"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "428296414415-74fqfugoi0clq55h2rm38sk4420bsmen.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXvdupr8Ab3xBmP9uQld8bsnP6PtgNpKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "428296414415-74fqfugoi0clq55h2rm38sk4420bsmen.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
