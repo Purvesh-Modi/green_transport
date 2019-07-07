@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),
                       child: Text(
-                        "Search Buses",
+                        AppTranslations.of(context).text("search_buses"),
                         style: TextStyle(color: Colors.white, fontSize: 24),
                       ),
                     ),
