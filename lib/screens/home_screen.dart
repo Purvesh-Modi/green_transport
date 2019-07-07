@@ -23,8 +23,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _sourceValue = AppTranslations.of(context).text("source");
-    _destValue = AppTranslations.of(context).text("Destination");
+    /*_sourceValue = AppTranslations.of(context).text("source");
+    _destValue = AppTranslations.of(context).text("Destination");*/
+
+    _sourceValue = "source";
+    _destValue = "Destination";
   }
 
   var textStyle;
@@ -271,7 +274,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _startDateValue;
+  String _startDateValue = 'Start Date';
 
   Future _selectStartDate() async {
     DateTime now = DateTime.now();
