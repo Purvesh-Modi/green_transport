@@ -155,21 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 48,
             ),
-            /*Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                OutlineButton(
-                  splashColor: Colors.blue[300],
-                  borderSide:
-                      BorderSide(color: Colors.blue[700], style: BorderStyle.solid, width: 1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  onPressed: _onGoButtonClick,
-                  child: Text('GO'),
-                ),
-              ],
-            ),*/
           ],
         ),
       ),
